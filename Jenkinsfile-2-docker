@@ -141,7 +141,7 @@ pipeline {
     }
 }
 def getSonarPath(){
-        def SonarHome= tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+        def SonarHome= tool name: 'Sonar-inst', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
         return SonarHome
     }
 def getDockerPath(){
