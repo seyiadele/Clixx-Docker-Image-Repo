@@ -3,33 +3,33 @@ pipeline {
     environment {
         VERSION = "1.0.${BUILD_NUMBER}"
         PATH = "${PATH}:${getSonarPath()}:${getDockerPath()}"
-        RUNNER = "RUKAYAT"
+        RUNNER = "ADELE"
         
     }
     stages {
-//         stage ('Sonarcube Scan') {
-//         steps {
-//           slackSend (color: '#FFFF00', message: "STARTING SONARQUBE SCAN -${env.RUNNER} : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-//          script {
-//           scannerHome = tool 'sonarqube'
-//         }
-//         withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]){
-//         withSonarQubeEnv('SonarQubeScanner') {
-//           sh " ${scannerHome}/bin/sonar-scanner \
-//           -Dsonar.projectKey=CliXX-App-Rukayat   \
-//           -Dsonar.login=${SONAR_TOKEN} "
-//         }
-//         }
-//         }
-// }
-//  stage('Quality Gate') {
-//             steps {
-//               slackSend (color: '#FFFF00', message: "QUALITY GATE CHECK -${env.RUNNER} : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-//                 timeout(time: 3, unit: 'MINUTES') {
-//                     waitForQualityGate abortPipeline: true
-//             }
-//             }
-//         }
+        stage ('Sonarcube Scan') {
+        steps {
+          slackSend (color: '#FFFF00', message: "STARTING SONARQUBE SCAN -${env.RUNNER} : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+         script {
+          scannerHome = tool 'sonarqube'
+        }
+        withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]){
+        withSonarQubeEnv('SonarQubeScanner') {
+          sh " ${scannerHome}/bin/sonar-scanner \
+          -Dsonar.projectKey=CliXX-App-Adele   \
+          -Dsonar.login=${SONAR_TOKEN} "
+        }
+        }
+        }
+}
+ stage('Quality Gate') {
+            steps {
+              slackSend (color: '#FFFF00', message: "QUALITY GATE CHECK -${env.RUNNER} : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+            }
+            }
+        }
           stage ('Build Docker Image') {
           steps {
             slackSend (color: '#FFFF00', message: "BUILD DOCKER IMAGE -${env.RUNNER} : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
@@ -40,21 +40,21 @@ pipeline {
             sh "docker build . -t clixx-image:$VERSION "
           }
         }
-  // stage ('Starting Docker Image') {
-  //         steps {
-  //           slackSend (color: '#FFFF00', message: "STARTING DOCKER IMAGE -${env.RUNNER} : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-  //             sh '''
-  //             if ( docker ps|grep clixx-cont ) then
-  //                echo "Docker image exists, killing it"
-  //                docker stop clixx-cont
-  //                docker rm clixx-cont
-  //                docker run --name clixx-cont  -p 80:80 -d clixx-image:$VERSION
-  //             else
-  //                docker run --name clixx-cont  -p 80:80 -d clixx-image:$VERSION 
-  //             fi
-  //             '''
-  //         }
-  //       }
+  stage ('Starting Docker Image') {
+          steps {
+            slackSend (color: '#FFFF00', message: "STARTING DOCKER IMAGE -${env.RUNNER} : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+              sh '''
+              if ( docker ps|grep clixx-cont ) then
+                 echo "Docker image exists, killing it"
+                 docker stop clixx-cont
+                 docker rm clixx-cont
+                 docker run --name clixx-cont  -p 80:80 -d clixx-image:$VERSION
+              else
+                 docker run --name clixx-cont  -p 80:80 -d clixx-image:$VERSION 
+              fi
+              '''
+          }
+        }
   // stage ('Restore CliXX Database') {
   //         steps {
   //           slackSend (color: '#FFFF00', message: "RESTORE CliXX DATABASE -${env.RUNNER} : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
@@ -117,26 +117,26 @@ pipeline {
       //         '''
       //     }
       //   }
-        stage ('Log Into ECR and push the newly created Docker') {
-          steps {
-            slackSend (color: '#FFFF00', message: "LOGGING INTO ECR AND PUSHING THE NEWLY CREATED DOCKER -${env.RUNNER} : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-             script {
-                def userInput = input(id: 'confirm', message: 'Push Image To ECR?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Push to ECR?', name: 'confirm'] ])
-             }
-              withCredentials([
-                     string(credentialsId: 'ecr_url', variable: 'ecr_url')
-                     ])
-                  {
-              sh '''
-                ECR_URL="${ecr_url}"
-                aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_URL
-                docker tag clixx-image:$VERSION $ECR_URL:clixx-image-$VERSION
-                docker tag clixx-image:$VERSION $ECR_URL:latest
-                docker push $ECR_URL:clixx-image-$VERSION
-                docker push $ECR_URL:latest
-              '''
-              }
-          }
+        // stage ('Log Into ECR and push the newly created Docker') {
+        //   steps {
+        //     slackSend (color: '#FFFF00', message: "LOGGING INTO ECR AND PUSHING THE NEWLY CREATED DOCKER -${env.RUNNER} : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+        //      script {
+        //         def userInput = input(id: 'confirm', message: 'Push Image To ECR?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Push to ECR?', name: 'confirm'] ])
+        //      }
+        //       withCredentials([
+        //              string(credentialsId: 'ecr_url', variable: 'ecr_url')
+        //              ])
+        //           {
+        //       sh '''
+        //         ECR_URL="${ecr_url}"
+        //         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_URL
+        //         docker tag clixx-image:$VERSION $ECR_URL:clixx-image-$VERSION
+        //         docker tag clixx-image:$VERSION $ECR_URL:latest
+        //         docker push $ECR_URL:clixx-image-$VERSION
+        //         docker push $ECR_URL:latest
+        //       '''
+        //       }
+        //   }
         }
     }
 }
