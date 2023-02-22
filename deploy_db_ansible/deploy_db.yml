@@ -2,17 +2,17 @@
   - name: "CliXX DB Deployment Ansible Playbook"
     hosts: localhost
     connection: local
-    # become: ec2-user
+    become: ec2-user
     vars:
       instance_id: wordpressdbclixxjenkins
-      db_snapshot: wordpressdbxlixxjenkins
+      db_snapshot: wordpressinstanceadele
       security_group: sg-0f213b57de378eeba
     tasks:
        - name: Restore DB from snapshot
          local_action:
            module: rds
            command: restore
-           snapshot: '{{db_snapshot }}'
+           snapshot: '{{ db_snapshot }}'
            instance_name: '{{ instance_id }}'
            region: us-east-1
            wait: yes
