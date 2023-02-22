@@ -15,7 +15,7 @@ pipeline {
         }
         withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]){
         withSonarQubeEnv('SonarQubeScanner') {
-        //   slackSend (color: '#FFFF00', message: "STARTING SONARQUBE SCAN -RUKAYAT : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+        //   slackSend (color: '#00ff5e', message: "Starting SonaQube Scan -Adele : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
           sh " ${scannerHome}/bin/sonar-scanner \
           -Dsonar.projectKey=CliXX-App   \
           -Dsonar.login=${SONAR_TOKEN} "
@@ -27,7 +27,7 @@ pipeline {
 
  stage('Quality Gate') {
             steps {
-                // slackSend (color: '#FFFF00', message: "QUALITY GATE CHECK -RUKAYAT : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+                // slackSend (color: '#00ff5e', message: "Quality Gate Check -Adele : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
                 timeout(time: 3, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
             }
@@ -37,14 +37,14 @@ pipeline {
 
   stage ('Build Docker Image and Push To ECR') {
           steps {
-            //   slackSend (color: '#FFFF00', message: "BUILD DOCKER IMAGE AND PUSH TO ECR -RUKAYAT : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+            //   slackSend (color: '#00ff5e', message: "Build Docker Image and Push to ECR -Adele : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
               sh "/usr/bin/docker build . -t clixx-image:$VERSION "
           }
         }
 
   stage ('Starting Docker Image for Testing') {
           steps {
-            //   slackSend (color: '#FFFF00', message: "STARTING DOCKER IMAGE FOR TESTING -RUKAYAT : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+            //   slackSend (color: '#00ff5e', message: "Starting Docker Image for Testing -Adele : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
               sh "/usr/bin/docker run --name clixx-cont-$VERSION  -p 80:80 -d clixx-image:$VERSION"
           }
         }
@@ -52,7 +52,7 @@ pipeline {
 
   stage ('Deployment Tear Down Prompt ') {
               steps {
-                // slackSend (color: '#FFFF00', message: "DEPLOYMENT TEAR DOWN PROMPT - -RUKAYAT : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+                // slackSend (color: '#00ff5e', message: "Deployment Tear Down Prompt - -Adele : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
                 script {
                 def userInput = input(id: 'confirm', message: 'Please Test CliXX Image Deployment. Should I delete now?', parameters: [ [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Tear Down App', name: 'confirm'] ])
              }
