@@ -3,7 +3,7 @@ pipeline {
     environment {
         VERSION = "1.0.${BUILD_NUMBER}"
         PATH = "${PATH}:${getSonarPath()}:${getDockerPath()}"
-        RUNNER = "RUKAYAT"
+        RUNNER = "Adele"
         
     }
     stages {
@@ -11,12 +11,12 @@ pipeline {
         steps {
           slackSend (color: '#FFFF00', message: "STARTING SONARQUBE SCAN -${env.RUNNER} : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
          script {
-          scannerHome = tool 'sonarqube'
+          scannerHome = tool 'Sonar-inst'
         }
         withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]){
         withSonarQubeEnv('SonarQubeScanner') {
           sh " ${scannerHome}/bin/sonar-scanner \
-          -Dsonar.projectKey=CliXX-App-Rukayat   \
+          -Dsonar.projectKey=CliXX-App-Adele   \
           -Dsonar.login=${SONAR_TOKEN} "
         }
         }
