@@ -7,29 +7,29 @@ pipeline {
         
     }
     stages {
-        stage ('Sonarcube Scan') {
-        steps {
-          slackSend (color: '#FFFF00', message: "STARTING SONARQUBE SCAN -${env.RUNNER} : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-         script {
-          scannerHome = tool 'Sonar-inst'
-        }
-        withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]){
-        withSonarQubeEnv('SonarQubeScanner') {
-          sh " ${scannerHome}/bin/sonar-scanner \
-          -Dsonar.projectKey=CliXX-App-Adele   \
-          -Dsonar.login=${SONAR_TOKEN} "
-        }
-        }
-        }
-}
- stage('Quality Gate') {
-            steps {
-              slackSend (color: '#FFFF00', message: "QUALITY GATE CHECK -${env.RUNNER} : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-                timeout(time: 5, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-            }
-            }
-        }
+//         stage ('Sonarcube Scan') {
+//         steps {
+//           slackSend (color: '#FFFF00', message: "STARTING SONARQUBE SCAN -${env.RUNNER} : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+//          script {
+//           scannerHome = tool 'Sonar-inst'
+//         }
+//         withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]){
+//         withSonarQubeEnv('SonarQubeScanner') {
+//           sh " ${scannerHome}/bin/sonar-scanner \
+//           -Dsonar.projectKey=CliXX-App-Adele   \
+//           -Dsonar.login=${SONAR_TOKEN} "
+//         }
+//         }
+//         }
+// }
+//  stage('Quality Gate') {
+//             steps {
+//               slackSend (color: '#FFFF00', message: "QUALITY GATE CHECK -${env.RUNNER} : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+//                 timeout(time: 5, unit: 'MINUTES') {
+//                     waitForQualityGate abortPipeline: true
+//             }
+//             }
+//         }
           stage ('Build Docker Image') {
           steps {
             slackSend (color: '#FFFF00', message: "BUILD DOCKER IMAGE -${env.RUNNER} : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
