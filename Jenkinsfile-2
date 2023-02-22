@@ -11,7 +11,7 @@ pipeline {
         steps {
           slackSend (color: '#FFFF00', message: "STARTING SONARQUBE SCAN -${env.RUNNER} : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
          script {
-          scannerHome = tool 'sonarqube'
+          scannerHome = tool 'Sonar-inst'
         }
         withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]){
         withSonarQubeEnv('SonarQubeScanner') {
