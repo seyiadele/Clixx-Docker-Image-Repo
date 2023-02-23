@@ -16,7 +16,8 @@
            instance_name: '{{ instance_id }}'
            region: us-east-1
            wait: yes
-           instance_type: db.t2.small
+          # instance_type: db.t2.small
+           instance_type: db.m5d.xlarge
            wait_timeout: 1200
        - name: Modify to add SG
          local_action:
