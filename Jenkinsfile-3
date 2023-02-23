@@ -54,8 +54,9 @@ pipeline {
               sh '''
             python3 -m venv python3-virtualenv
             source python3-virtualenv/bin/activate
+            python3 -m pip install --upgrade pip
             python3 --version
-            pip3 install boto3 botocore boto
+            pip3 install boto3 botocore boto ansible
             ansible-playbook $WORKSPACE/deploy_db_ansible/deploy_db.yml
             deactivate
               '''
