@@ -2,7 +2,6 @@
   - name: "CliXX DB Deployment Ansible Playbook"
     hosts: localhost
     connection: local
-    # become: ec2-user
     vars:
       instance_id: wordpressdbclixxjenkins
       db_snapshot: wordpressinstanceadele
@@ -17,7 +16,6 @@
            region: us-east-1
            wait: yes
            instance_type: db.t2.small
-          
            wait_timeout: 1200
        - name: Modify to add SG
          local_action:
