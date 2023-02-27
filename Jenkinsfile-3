@@ -1,8 +1,11 @@
 pipeline {
     agent any
+
+
     environment {
         VERSION = "1.0.${BUILD_NUMBER}"
         PATH = "${PATH}:${getSonarPath()}:${getDockerPath()}"
+        RUNNER = "${RUNNER}"
     }
     stages {
         stage ('Sonarcube Scan') {

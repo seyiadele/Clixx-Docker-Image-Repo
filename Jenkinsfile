@@ -11,13 +11,13 @@ pipeline {
         steps {
             
          script {
-          scannerHome = tool 'sonarqube'
+          scannerHome = tool 'Sonar-inst'
         }
         withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]){
         withSonarQubeEnv('SonarQubeScanner') {
         //   slackSend (color: '#00ff5e', message: "Starting SonaQube Scan -Adele : Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
           sh " ${scannerHome}/bin/sonar-scanner \
-          -Dsonar.projectKey=CliXX-App   \
+          -Dsonar.projectKey=CliXX-App-Adele   \
           -Dsonar.login=${SONAR_TOKEN} "
         }
         }
@@ -68,7 +68,7 @@ pipeline {
 
 
 def getSonarPath(){
-        def SonarHome= tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+        def SonarHome= tool name: 'Sonar-inst', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
         return SonarHome
     }
 def getDockerPath(){
