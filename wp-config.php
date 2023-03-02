@@ -32,7 +32,7 @@ define( 'DB_PASSWORD', 'W3lcome123' );
 // define( 'DB_HOST', 'wordpressdbyeni.cv9qx40jwoy8.us-east-1.rds.amazonaws.com' );
 
 /** MySQL hostname */
-define( 'DB_HOST', 'wordpressdbclixxjenkins.czjw3chqpmre.us-east-1.rds.amazonaws.com' );
+define( 'DB_HOST', 'wordpressdbclixxjenkins.cdaneey5tyod.us-east-1.rds.amazonaws.com' );
 
 /** Database Charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8' );
